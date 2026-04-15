@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: task1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-app
+    # matchExpressions:
+    #   - key: app
+    #     operator: In
+    #     values: [nginx, multitool]
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multitool-deployment
+  namespace: task1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: multitool-app
+  template:
+    metadata:
+      labels:
+        app: multitool-app
+    spec: 
+      containers:
+        - name: multitool-container
+          image: wbitt/network-multitool:latest
+          # command: ["sleep", "180"]
+
+

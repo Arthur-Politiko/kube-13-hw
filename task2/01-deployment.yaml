@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: task2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+    # matchExpressions:
+    #   - key: app
+    #     operator: In
+    #     values: [nginx, multitool]
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      initContainers:
+        - name: init-container
+          image: busybox:latest
+          command: 
+            - 'sh'
+            - '-c'
+            - |
+              echo "========================================="
+              echo "Init container is running at $(date)" 
+              echo "Waiting for service: nginx-service"
+              echo "========================================="
+              for i in $(seq 1 30); do
+                if nslookup nginx-service.task2.svc.cluster.local > /dev/null 2>&1; then
+                  echo "========================================="
+                  echo "Service is available at $(date)"
+                  echo "Init container is done at $(date)"
+                  echo "========================================="
+                  exit 0
+                fi
+                echo "Waiting for service... ($i/30)"
+                sleep 2
+              done
+              echo "========================================="
+              echo "Service is not available after 60 seconds. Exiting with failure."
+              echo "========================================="
+              exit 1
+
+      containers:
+        - name: nginx-container
+          image: nginx:latest
+          # command: 
+          #   - 'sh'
+          #   - '-c'
+          #   - |
+          #     echo "========================================="
+          #     echo "Nginx container is running at $(date)"
+          #     echo "=========================================" 
+          ports:
+            - containerPort: 80
+
