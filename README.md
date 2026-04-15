@@ -80,7 +80,7 @@ k exec -it multitool-deployment-xxx -n task1 -- curl http://xxx:80
 1. Создаем Deployment приложения, состоящего из двух контейнеров — nginx и multitool.
 
 ```bash
-kubectl apply -f .
+k apply -f .
 ```
 
 2. После запуска увеличить количество реплик работающего приложения до 2. и смотрим количество подов до и после масштабирования.
@@ -99,7 +99,7 @@ kubectl apply -f .
 
 Вот так вначале проверяем, что service отсутствует:
 ```bash
-kubectl get service -n task2
+k get service -n task2
 ```
 После запускаем кластер вот такой командой:
 ```bash
@@ -108,12 +108,12 @@ kubectl get service -n task2
 
 Смотрим имя нашего pod-а:
 ```bash
-kubectl get pods -n task2
+k get pods -n task2
 ```
 
 После запуска service мы можем проверить, что init контейнер успешно запустился:
 ```bash
-kubectl logs -n task2 nginx-deployment-xxx -n task2 --all-containers
+k logs -n task2 nginx-deployment-xxx -n task2 --all-containers
 ```
 
 ![answer](./img/12-03-02.png)
